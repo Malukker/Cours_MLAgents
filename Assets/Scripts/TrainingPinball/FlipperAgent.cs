@@ -1,8 +1,27 @@
+using System.Collections.Generic;
+using System.Linq;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
 using static Flipper;
+
+public enum RewardType
+{
+    None = 0,
+    Target = 20,
+    Drain = -10,
+    OtherSide = -5,
+    ResetZone = -1,
+    Timeout = -5
+}
+
+public struct RewardCount
+{
+    public Dictionary<RewardType, float> CumulatedRewards;
+    public float MeanReward => CumulatedRewards.Values.Average();
+    
+}
 
 public class FlipperAgent : Agent
 {
@@ -53,6 +72,7 @@ public class FlipperAgent : Agent
         trainingPinball.onBallEnterBound += HandleOnBallEnterBound;
         trainingPinball.onBallHitTarget += HandleOnBallHitTarget;
         trainingPinball.onEpisodeEnd += HandleOnEpisodeEnd;
+        trainingPinball.onTimeOut += HandleOnTimeout;
     }
 
     private void OnDestroy()
@@ -73,6 +93,7 @@ public class FlipperAgent : Agent
         trainingPinball.onBallEnterBound -= HandleOnBallEnterBound;
         trainingPinball.onBallHitTarget -= HandleOnBallHitTarget;
         trainingPinball.onEpisodeEnd -= HandleOnEpisodeEnd;
+        trainingPinball.onTimeOut -= HandleOnTimeout;
     }
 
     private void FixedUpdate()
@@ -91,9 +112,39 @@ public class FlipperAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        //sensor.AddObservation(value);
+        sensor.AddObservation(GetFlipperToBallVector());
+        sensor.AddObservation(GetTargetPosition());
+        sensor.AddObservation(GetFlipperNormalizedAngle());
+        sensor.AddObservation(GetDistanceToTarget());
+    }
+    
+    Vector2 GetFlipperToBallVector()
+    {
+        Vector2 result = trainingPinball.Ball.transform.position - trainingPinball.Flipper(side).transform.position;
+        result = result.normalized * trainingPinball.Configuration.AveragePinballDimension;
+        result = trainingPinball.Flipper(side).WorldToLocalVector(result);
+
+        return result;
     }
 
+    Vector2 GetTargetPosition()
+    {
+        return trainingPinball.Target.transform.position;
+    }
+
+    float GetFlipperNormalizedAngle()
+    {
+        float result = trainingPinball.Flipper(side).CurrentAngleOffset - trainingPinball.Flipper(side).InitialAngle;
+        result /= trainingPinball.Flipper(side).FinalAngle - trainingPinball.Flipper(side).InitialAngle;
+
+        return result;
+    }
+
+    float GetDistanceToTarget()
+    {
+        return (trainingPinball.Target.transform.position - trainingPinball.Ball.transform.position).magnitude;
+    }
+    
     public override void OnActionReceived(ActionBuffers actions)
     {
         bool isPressed = actions.DiscreteActions[0] > 0;
@@ -117,6 +168,7 @@ public class FlipperAgent : Agent
 
     void HandleOnEpisodeEnd()
     {
+        Debug.Log(GetCumulativeReward());
         EndEpisode();
         episodeId++;
     }
@@ -145,7 +197,7 @@ public class FlipperAgent : Agent
 
     void HandleOnBallHitTarget()
     {
-        AddReward(1);
+        AddReward((int)RewardType.Target);
     }
 
     void HandleOnBallEnterAnyFlipper(FlipperSide side)
@@ -161,14 +213,21 @@ public class FlipperAgent : Agent
         switch (type)
         {
             case BoundTrigger.BoundType.Drain:
-                AddReward(-1);
+                AddReward((int)RewardType.Drain);
                 break;
             case BoundTrigger.BoundType.OtherSide:
+                AddReward((int)RewardType.OtherSide);
                 break;
             case BoundTrigger.BoundType.ResetZone:
+                AddReward((int)RewardType.ResetZone);
                 break;
             default:
                 break;
         }
+    }
+
+    void HandleOnTimeout()
+    {
+        AddReward((int)RewardType.Timeout);
     }
 }

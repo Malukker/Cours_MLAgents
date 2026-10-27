@@ -50,6 +50,7 @@ public class TrainingPinballArea : MonoBehaviour {
     public Action<BoundTrigger.BoundType> onBallEnterBound;
     public Action onEpisodeEnd;
     public Action onBallHitTarget;
+    public Action onTimeOut;
 
     float episodeBeginTimestamp = 0f;
 
@@ -136,6 +137,7 @@ public class TrainingPinballArea : MonoBehaviour {
         flippers[1]?.SetState(isButtonsPressed[1]);
 
         if (episodeDuration > 0 && Time.fixedTime - episodeBeginTimestamp >= episodeDuration) {
+            onTimeOut?.Invoke();
             PlayNextEpisode();
         }
     }
