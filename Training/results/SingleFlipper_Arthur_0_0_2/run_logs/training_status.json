@@ -2,31 +2,31 @@
     "PinballFlipper": {
         "checkpoints": [
             {
-                "steps": 499976,
-                "file_path": "results\\SingleFlipper_Arthur_0_0_2\\PinballFlipper\\PinballFlipper-499976.onnx",
-                "reward": 83.7882391985725,
-                "creation_time": 1793177098.8712838,
+                "steps": 499807,
+                "file_path": "results\\SingleFlipper_Arthur_0_0_2\\PinballFlipper\\PinballFlipper-499807.onnx",
+                "reward": 11.68203312700445,
+                "creation_time": 1793180444.789648,
                 "auxillary_file_paths": [
-                    "results\\SingleFlipper_Arthur_0_0_2\\PinballFlipper\\PinballFlipper-499976.pt"
+                    "results\\SingleFlipper_Arthur_0_0_2\\PinballFlipper\\PinballFlipper-499807.pt"
                 ]
             },
             {
-                "steps": 600006,
-                "file_path": "results\\SingleFlipper_Arthur_0_0_2\\PinballFlipper\\PinballFlipper-600006.onnx",
-                "reward": 84.05685589764569,
-                "creation_time": 1793177186.6813147,
+                "steps": 600036,
+                "file_path": "results\\SingleFlipper_Arthur_0_0_2\\PinballFlipper\\PinballFlipper-600036.onnx",
+                "reward": 12.592581175469064,
+                "creation_time": 1793180529.5613744,
                 "auxillary_file_paths": [
-                    "results\\SingleFlipper_Arthur_0_0_2\\PinballFlipper\\PinballFlipper-600006.pt"
+                    "results\\SingleFlipper_Arthur_0_0_2\\PinballFlipper\\PinballFlipper-600036.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 600006,
+            "steps": 600036,
             "file_path": "results\\SingleFlipper_Arthur_0_0_2\\PinballFlipper.onnx",
-            "reward": 84.05685589764569,
-            "creation_time": 1793177186.6813147,
+            "reward": 12.592581175469064,
+            "creation_time": 1793180529.5613744,
             "auxillary_file_paths": [
-                "results\\SingleFlipper_Arthur_0_0_2\\PinballFlipper\\PinballFlipper-600006.pt"
+                "results\\SingleFlipper_Arthur_0_0_2\\PinballFlipper\\PinballFlipper-600036.pt"
             ]
         }
     },

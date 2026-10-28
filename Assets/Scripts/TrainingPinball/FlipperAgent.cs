@@ -8,19 +8,19 @@ using static Flipper;
 
 public enum RewardType
 {
-    None = 0,
+    None = 1,
 
     // grosse récompense pour la cible
     Target = 20,
 
     // grosse pénalité pour la zone du bas
-    Drain = -10,
+    Drain = -20,
 
     // pénalité pour le flipper en face (qu'on modifiera pour le mode deux joueurs
-    OtherSide = -5,
+    OtherSide = 0,
 
     // mini-pénalité pour la zone verte
-    ResetZone = -1,
+    ResetZone = -2,
 
     // pénalité pour avoir timeout
     Timeout = -5
@@ -34,7 +34,7 @@ public struct RewardCount
 
 public class FlipperAgent : Agent
 {
-    const float distanceRewardMultiplier = 5f;
+    const float distanceRewardMultiplier = 20f;
 
     static int NextAgentId = 0;
 
@@ -127,17 +127,26 @@ public class FlipperAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
+        sensor.AddObservation(GetLocalBallVelocityDirection());
         // Connaît la direction du flipper à la balle (dans le repère du flipper)
         sensor.AddObservation(GetFlipperToBallVector());
         // Connait la position de la cible
         sensor.AddObservation(GetTargetPosition());
         // Connait l'angle du flipper
-        // sensor.AddObservation(GetFlipperNormalizedAngle());
+        sensor.AddObservation(GetFlipperNormalizedAngle());
         // Connait la distance à la cible
         sensor.AddObservation(GetDistanceToTarget());
         UpdateDistanceReward(GetDistanceToTarget());
     }
 
+    Vector2 GetLocalBallVelocityDirection()
+    {
+        Vector2 result = trainingPinball.Ball.linearVelocity.normalized;
+        result = trainingPinball.Flipper(side).WorldToLocalVector(result);
+        
+        return result;
+    }
+    
     Vector2 GetFlipperToBallVector()
     {
         Vector2 result = trainingPinball.Ball.transform.position - trainingPinball.Flipper(side).transform.position;
@@ -149,20 +158,22 @@ public class FlipperAgent : Agent
 
     Vector2 GetTargetPosition()
     {
-        return trainingPinball.Target.transform.position;
+        Vector2 result =
+            trainingPinball.Target.transform.position - trainingPinball.Flipper(side).transform.position;
+        result /= trainingPinball.Configuration.AveragePinballDimension;
+        
+        return result;
     }
 
     float GetFlipperNormalizedAngle()
     {
-        float result = trainingPinball.Flipper(side).CurrentAngleOffset - trainingPinball.Flipper(side).InitialAngle;
-        result /= trainingPinball.Flipper(side).FinalAngle - trainingPinball.Flipper(side).InitialAngle;
-
-        return result;
+        return trainingPinball.Flipper(side).CurrentAngleOffset / trainingPinball.Configuration.FlipperAngleOffsetMax;
     }
 
     float GetDistanceToTarget()
     {
         float result = (trainingPinball.Target.transform.position - trainingPinball.Ball.transform.position).magnitude;
+        result /= trainingPinball.Configuration.AveragePinballDimension.x;
         return result;
     }
 
