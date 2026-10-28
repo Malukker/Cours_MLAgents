@@ -9,10 +9,20 @@ using static Flipper;
 public enum RewardType
 {
     None = 0,
+
+    // grosse récompense pour la cible
     Target = 20,
+
+    // grosse pénalité pour la zone du bas
     Drain = -10,
+
+    // pénalité pour le flipper en face (qu'on modifiera pour le mode deux joueurs
     OtherSide = -5,
+
+    // mini-pénalité pour la zone verte
     ResetZone = -1,
+
+    // pénalité pour avoir timeout
     Timeout = -5
 }
 
@@ -20,11 +30,12 @@ public struct RewardCount
 {
     public Dictionary<RewardType, float> CumulatedRewards;
     public float MeanReward => CumulatedRewards.Values.Average();
-    
 }
 
 public class FlipperAgent : Agent
 {
+    const float distanceRewardMultiplier = 5f;
+
     static int NextAgentId = 0;
 
     [SerializeField] TrainingPinballArea trainingPinball;
@@ -47,6 +58,9 @@ public class FlipperAgent : Agent
         Time.fixedDeltaTime *
         3; // Solves jittering at low speed. We allow 3 fixed update of before counting a new collision as an "OnCollisionEnter"    
 
+    float _initDistanceToTarget;
+    float _minDistanceToTarget;
+    
     void Awake()
     {
         playerController = new PlayerController();
@@ -108,16 +122,22 @@ public class FlipperAgent : Agent
         ballEnterFlipperTimestamp = 0f;
         ballEnterOtherFlipperTimestamp = 0;
         episodeBeginTimestamp = Time.fixedTime;
+        ResetDistanceReward();
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
+        // Connaît la direction du flipper à la balle (dans le repère du flipper)
         sensor.AddObservation(GetFlipperToBallVector());
+        // Connait la position de la cible
         sensor.AddObservation(GetTargetPosition());
-        sensor.AddObservation(GetFlipperNormalizedAngle());
+        // Connait l'angle du flipper
+        // sensor.AddObservation(GetFlipperNormalizedAngle());
+        // Connait la distance à la cible
         sensor.AddObservation(GetDistanceToTarget());
+        UpdateDistanceReward(GetDistanceToTarget());
     }
-    
+
     Vector2 GetFlipperToBallVector()
     {
         Vector2 result = trainingPinball.Ball.transform.position - trainingPinball.Flipper(side).transform.position;
@@ -142,7 +162,25 @@ public class FlipperAgent : Agent
 
     float GetDistanceToTarget()
     {
-        return (trainingPinball.Target.transform.position - trainingPinball.Ball.transform.position).magnitude;
+        float result = (trainingPinball.Target.transform.position - trainingPinball.Ball.transform.position).magnitude;
+        return result;
+    }
+
+    void ResetDistanceReward()
+    {
+        _initDistanceToTarget = GetDistanceToTarget();
+        _minDistanceToTarget = _initDistanceToTarget;
+    }
+
+    void UpdateDistanceReward(float newDistance)
+    {
+        _minDistanceToTarget = newDistance < _minDistanceToTarget ? newDistance : _minDistanceToTarget;
+    }
+
+    void GiveDistanceReward()
+    {
+        float reward = Mathf.InverseLerp(_initDistanceToTarget, 0f, _minDistanceToTarget);
+        AddReward(reward * distanceRewardMultiplier);
     }
     
     public override void OnActionReceived(ActionBuffers actions)
@@ -166,8 +204,11 @@ public class FlipperAgent : Agent
         discreteActionsOut[0] = isPressed ? 1 : 0;
     }
 
+    #region Handlers
+
     void HandleOnEpisodeEnd()
     {
+        GiveDistanceReward();
         Debug.Log(GetCumulativeReward());
         EndEpisode();
         episodeId++;
@@ -230,4 +271,6 @@ public class FlipperAgent : Agent
     {
         AddReward((int)RewardType.Timeout);
     }
+
+    #endregion
 }
