@@ -172,6 +172,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8483205016344740207, guid: 7ff41f86366f22945aa018cd76c1ebb1, type: 3}
+      propertyPath: timeScale
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8483205016344740207, guid: 7ff41f86366f22945aa018cd76c1ebb1, type: 3}
+      propertyPath: toggledOn
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8483205016344740207, guid: 7ff41f86366f22945aa018cd76c1ebb1, type: 3}
       propertyPath: speedUpOnAwake
       value: 1
       objectReference: {fileID: 0}
@@ -372,6 +380,18 @@ PrefabInstance:
     - target: {fileID: 3497045355834576187, guid: 333f20e213640e34dacd6c074660c21e, type: 3}
       propertyPath: m_Creator
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5701941905613047847, guid: 333f20e213640e34dacd6c074660c21e, type: 3}
+      propertyPath: m_Model
+      value: 
+      objectReference: {fileID: 5022602860645237092, guid: 378c8ad158acacb4682a5b164a162d8f, type: 3}
+    - target: {fileID: 5701941905613047847, guid: 333f20e213640e34dacd6c074660c21e, type: 3}
+      propertyPath: m_BehaviorType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5701941905613047847, guid: 333f20e213640e34dacd6c074660c21e, type: 3}
+      propertyPath: m_BrainParameters.VectorObservationSize
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 7034968556934412149, guid: 333f20e213640e34dacd6c074660c21e, type: 3}
       propertyPath: m_Name

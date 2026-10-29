@@ -1739,6 +1739,14 @@ PrefabInstance:
       propertyPath: trainingPinball
       value: 
       objectReference: {fileID: 4728365066704088780}
+    - target: {fileID: 6143876766288088247, guid: 47c18c45ec2b4bb439b31d25d30949e3, type: 3}
+      propertyPath: m_Model
+      value: 
+      objectReference: {fileID: 5022602860645237092, guid: d88cb43bcf2ea6d4a91dbfb05105122e, type: 3}
+    - target: {fileID: 6143876766288088247, guid: 47c18c45ec2b4bb439b31d25d30949e3, type: 3}
+      propertyPath: m_BehaviorType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7550184429312842341, guid: 47c18c45ec2b4bb439b31d25d30949e3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

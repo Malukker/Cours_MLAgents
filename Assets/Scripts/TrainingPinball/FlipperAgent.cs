@@ -34,7 +34,10 @@ public struct RewardCount
 
 public class FlipperAgent : Agent
 {
-    const float distanceRewardMultiplier = 20f;
+    const float _speedThreshold = 3f;
+    const float _heightThreshold = 0.1f;
+    const float _distanceRewardMultiplier = 20f;
+    const float _slowDownRewardMultiplier = 100f;
 
     static int NextAgentId = 0;
 
@@ -60,12 +63,19 @@ public class FlipperAgent : Agent
 
     float _initDistanceToTarget;
     float _minDistanceToTarget;
-    
+
+    float _ballSlowdownCumulatedTime;
+
+    static int _episodesCount;
+    static int _winCount;
+
     void Awake()
     {
         playerController = new PlayerController();
         playerController.Enable();
         id = NextAgentId++;
+        _episodesCount = 0;
+        _winCount = 0;
     }
 
     void Start()
@@ -123,11 +133,17 @@ public class FlipperAgent : Agent
         ballEnterOtherFlipperTimestamp = 0;
         episodeBeginTimestamp = Time.fixedTime;
         ResetDistanceReward();
+        ResetSlowdownReward();
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
+        // Connait la vitesse de la balle 
+        sensor.AddObservation(GetBallVelocityMagnitude());
+        // Connait la direction du mouvement de la balle
         sensor.AddObservation(GetLocalBallVelocityDirection());
+        // Connaît la présence de la balle en dessous de la limite
+        sensor.AddObservation(IsBallUnderHeightThreshold());
         // Connaît la direction du flipper à la balle (dans le repère du flipper)
         sensor.AddObservation(GetFlipperToBallVector());
         // Connait la position de la cible
@@ -136,17 +152,25 @@ public class FlipperAgent : Agent
         sensor.AddObservation(GetFlipperNormalizedAngle());
         // Connait la distance à la cible
         sensor.AddObservation(GetDistanceToTarget());
+        // Met à jour la plus petite distance à la cible, pour la récompense liée
         UpdateDistanceReward(GetDistanceToTarget());
+        // Incrémente le temps passé par la balle sous une vitesse et une hauteur déterminées, pour la récompense liée
+        IncrementSlowdownReward();
+    }
+
+    float GetBallVelocityMagnitude()
+    {
+        return trainingPinball.Ball.linearVelocity.magnitude;
     }
 
     Vector2 GetLocalBallVelocityDirection()
     {
         Vector2 result = trainingPinball.Ball.linearVelocity.normalized;
         result = trainingPinball.Flipper(side).WorldToLocalVector(result);
-        
+
         return result;
     }
-    
+
     Vector2 GetFlipperToBallVector()
     {
         Vector2 result = trainingPinball.Ball.transform.position - trainingPinball.Flipper(side).transform.position;
@@ -161,7 +185,7 @@ public class FlipperAgent : Agent
         Vector2 result =
             trainingPinball.Target.transform.position - trainingPinball.Flipper(side).transform.position;
         result /= trainingPinball.Configuration.AveragePinballDimension;
-        
+
         return result;
     }
 
@@ -191,9 +215,37 @@ public class FlipperAgent : Agent
     void GiveDistanceReward()
     {
         float reward = Mathf.InverseLerp(_initDistanceToTarget, 0f, _minDistanceToTarget);
-        AddReward(reward * distanceRewardMultiplier);
+        AddReward(reward * _distanceRewardMultiplier);
     }
-    
+
+    bool IsBallUnderHeightThreshold()
+    {
+        Vector2 pos =
+            trainingPinball.Ball.transform.position - trainingPinball.Flipper(side).transform.position;
+        pos /= trainingPinball.Configuration.AveragePinballDimension;
+
+        return pos.y <= _heightThreshold;
+    }
+
+    void ResetSlowdownReward()
+    {
+        _ballSlowdownCumulatedTime = 0;
+    }
+
+    void IncrementSlowdownReward()
+    {
+        float speed = GetBallVelocityMagnitude();
+        if (speed < _speedThreshold && IsBallUnderHeightThreshold() && _ballSlowdownCumulatedTime < 1)
+        {
+            _ballSlowdownCumulatedTime += Time.fixedDeltaTime * 2;
+        }
+    }
+
+    void GiveSlowdownReward()
+    {
+        AddReward(_ballSlowdownCumulatedTime * _slowDownRewardMultiplier);
+    }
+
     public override void OnActionReceived(ActionBuffers actions)
     {
         bool isPressed = actions.DiscreteActions[0] > 0;
@@ -219,8 +271,15 @@ public class FlipperAgent : Agent
 
     void HandleOnEpisodeEnd()
     {
+        _episodesCount++;
         GiveDistanceReward();
+        GiveSlowdownReward();
         Debug.Log(GetCumulativeReward());
+        if (_episodesCount == 100)
+        {
+            Debug.Log($"Winrate : {_winCount * 100f / _episodesCount} % over 100 tries");
+        }
+
         EndEpisode();
         episodeId++;
     }
@@ -249,6 +308,7 @@ public class FlipperAgent : Agent
 
     void HandleOnBallHitTarget()
     {
+        _winCount++;
         AddReward((int)RewardType.Target);
     }
 
