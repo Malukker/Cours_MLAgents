@@ -335,6 +335,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: DualFlippersLearningArea
       objectReference: {fileID: 0}
+    - target: {fileID: 3875843456932071098, guid: 41a378e16c99893499c66190e865c71f, type: 3}
+      propertyPath: m_Model
+      value: 
+      objectReference: {fileID: 5022602860645237092, guid: bf6993e2563bdc84f8af75f2e22f268a, type: 3}
+    - target: {fileID: 3875843456932071098, guid: 41a378e16c99893499c66190e865c71f, type: 3}
+      propertyPath: m_BehaviorType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3875843456932071098, guid: 41a378e16c99893499c66190e865c71f, type: 3}
+      propertyPath: m_BrainParameters.VectorObservationSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3875843456932071098, guid: 41a378e16c99893499c66190e865c71f, type: 3}
+      propertyPath: m_BrainParameters.NumStackedVectorObservations
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4354553173821907725, guid: 41a378e16c99893499c66190e865c71f, type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[67].x
       value: -22.16468
@@ -366,6 +382,22 @@ PrefabInstance:
     - target: {fileID: 4354553173821907725, guid: 41a378e16c99893499c66190e865c71f, type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[70].y
       value: -0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5673363807256612966, guid: 41a378e16c99893499c66190e865c71f, type: 3}
+      propertyPath: m_Model
+      value: 
+      objectReference: {fileID: 5022602860645237092, guid: bf6993e2563bdc84f8af75f2e22f268a, type: 3}
+    - target: {fileID: 5673363807256612966, guid: 41a378e16c99893499c66190e865c71f, type: 3}
+      propertyPath: m_BehaviorType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5673363807256612966, guid: 41a378e16c99893499c66190e865c71f, type: 3}
+      propertyPath: m_BrainParameters.VectorObservationSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5673363807256612966, guid: 41a378e16c99893499c66190e865c71f, type: 3}
+      propertyPath: m_BrainParameters.NumStackedVectorObservations
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7048743183649336713, guid: 41a378e16c99893499c66190e865c71f, type: 3}
       propertyPath: m_Creator

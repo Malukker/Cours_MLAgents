@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.MLAgents;
@@ -11,7 +12,7 @@ public enum RewardType
     None = 1,
 
     // grosse récompense pour la cible
-    Target = 20,
+    Target = 30,
 
     // grosse pénalité pour la zone du bas
     Drain = -20,
@@ -23,21 +24,15 @@ public enum RewardType
     ResetZone = -2,
 
     // pénalité pour avoir timeout
-    Timeout = -5
-}
-
-public struct RewardCount
-{
-    public Dictionary<RewardType, float> CumulatedRewards;
-    public float MeanReward => CumulatedRewards.Values.Average();
+    Timeout = -60
 }
 
 public class FlipperAgent : Agent
 {
-    const float _speedThreshold = 3f;
+    const float _speedThreshold = 4f;
     const float _heightThreshold = 0.1f;
-    const float _distanceRewardMultiplier = 20f;
-    const float _slowDownRewardMultiplier = 100f;
+    const float _distanceRewardMultiplier = 10f;
+    const float _slowDownRewardMultiplier = 20f;
 
     static int NextAgentId = 0;
 
@@ -68,6 +63,8 @@ public class FlipperAgent : Agent
 
     static int _episodesCount;
     static int _winCount;
+    
+    const int _timespan = 30;
 
     void Awake()
     {
@@ -97,6 +94,15 @@ public class FlipperAgent : Agent
         trainingPinball.onBallHitTarget += HandleOnBallHitTarget;
         trainingPinball.onEpisodeEnd += HandleOnEpisodeEnd;
         trainingPinball.onTimeOut += HandleOnTimeout;
+
+        StartCoroutine(WinStatsRoutine());
+    }
+
+    IEnumerator WinStatsRoutine()
+    {
+        yield return new WaitForSeconds(_timespan);
+        
+        Debug.Log($"Won {_winCount} times over {_timespan} seconds.");
     }
 
     private void OnDestroy()
@@ -167,7 +173,9 @@ public class FlipperAgent : Agent
     {
         Vector2 result = trainingPinball.Ball.linearVelocity.normalized;
         result = trainingPinball.Flipper(side).WorldToLocalVector(result);
-
+        
+        result.x = side == FlipperSide.Right ? -result.x : result.x;
+        
         return result;
     }
 
@@ -177,6 +185,8 @@ public class FlipperAgent : Agent
         result = result.normalized * trainingPinball.Configuration.AveragePinballDimension;
         result = trainingPinball.Flipper(side).WorldToLocalVector(result);
 
+        result.x = side == FlipperSide.Right ? -result.x : result.x;
+        
         return result;
     }
 
@@ -186,6 +196,8 @@ public class FlipperAgent : Agent
             trainingPinball.Target.transform.position - trainingPinball.Flipper(side).transform.position;
         result /= trainingPinball.Configuration.AveragePinballDimension;
 
+        result.x = side == FlipperSide.Right ? -result.x : result.x;
+        
         return result;
     }
 
