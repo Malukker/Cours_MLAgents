@@ -1,0 +1,5 @@
+Temps;Episodes;MoyennePeriode;MoyenneTotale;CumulTotal;CibleTouchee;BalleDansDrain;BalleSortie;TempsEcoule
+0; 0;0,000;0,000;0;0;0;0;0
+10; 103;0,058;0,058;6;11;5;76;11
+20; 226;0,049;0,053;12;22;10;170;24
+30; 350;0,073;0,060;21;39;18;253;40

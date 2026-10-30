@@ -1,0 +1,47 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1793358529",
+        "python_version": "3.10.12 | packaged by Anaconda, Inc. | (main, Jul  5 2023, 19:01:18) [MSC v.1916 64 bit (AMD64)]",
+        "command_line_arguments": "D:\\TP IA\\envs\\mlagents\\Scripts\\mlagents-learn FirstFlipperPPO.yaml --run-id=SouhaiteEnzo_0_0_1",
+        "mlagents_version": "1.1.0",
+        "mlagents_envs_version": "1.1.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "2.2.2+cu121",
+        "numpy_version": "1.23.5",
+        "end_time_seconds": "1793358591"
+    },
+    "total": 62.23799110000073,
+    "count": 1,
+    "self": 0.014768800000638294,
+    "children": {
+        "run_training.setup": {
+            "total": 0.13554330000079062,
+            "count": 1,
+            "self": 0.13554330000079062
+        },
+        "TrainerController.start_learning": {
+            "total": 62.0876789999993,
+            "count": 1,
+            "self": 0.0004734999993161182,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 62.08719539999947,
+                    "count": 1,
+                    "self": 62.08719539999947
+                },
+                "trainer_threads": {
+                    "total": 1.2000000424450263e-06,
+                    "count": 1,
+                    "self": 1.2000000424450263e-06
+                },
+                "TrainerController._save_models": {
+                    "total": 8.900000466383062e-06,
+                    "count": 1,
+                    "self": 8.900000466383062e-06
+                }
+            }
+        }
+    }
+}

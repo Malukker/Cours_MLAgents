@@ -1,0 +1,56 @@
+{
+    "PinballFlipper": {
+        "checkpoints": [
+            {
+                "steps": 73876,
+                "file_path": "results\\FirstFlipper_0_0_0\\PinballFlipper\\PinballFlipper-73876.onnx",
+                "reward": 0.10526315789473684,
+                "creation_time": 1793112751.4339254,
+                "auxillary_file_paths": [
+                    "results\\FirstFlipper_0_0_0\\PinballFlipper\\PinballFlipper-73876.pt"
+                ]
+            },
+            {
+                "steps": 73876,
+                "file_path": "results\\FirstFlipper_0_0_0\\PinballFlipper\\PinballFlipper-73876.onnx",
+                "reward": null,
+                "creation_time": 1793177555.2374048,
+                "auxillary_file_paths": [
+                    "results\\FirstFlipper_0_0_0\\PinballFlipper\\PinballFlipper-73876.pt"
+                ]
+            },
+            {
+                "steps": 91086,
+                "file_path": "results\\FirstFlipper_0_0_0\\PinballFlipper\\PinballFlipper-91086.onnx",
+                "reward": 0.0,
+                "creation_time": 1793178102.8787153,
+                "auxillary_file_paths": [
+                    "results\\FirstFlipper_0_0_0\\PinballFlipper\\PinballFlipper-91086.pt"
+                ]
+            },
+            {
+                "steps": 96304,
+                "file_path": "results\\FirstFlipper_0_0_0\\PinballFlipper\\PinballFlipper-96304.onnx",
+                "reward": 0.05263157894736842,
+                "creation_time": 1793178993.8197992,
+                "auxillary_file_paths": [
+                    "results\\FirstFlipper_0_0_0\\PinballFlipper\\PinballFlipper-96304.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 96304,
+            "file_path": "results\\FirstFlipper_0_0_0\\PinballFlipper.onnx",
+            "reward": 0.05263157894736842,
+            "creation_time": 1793178993.8197992,
+            "auxillary_file_paths": [
+                "results\\FirstFlipper_0_0_0\\PinballFlipper\\PinballFlipper-96304.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.2.2+cu121"
+    }
+}

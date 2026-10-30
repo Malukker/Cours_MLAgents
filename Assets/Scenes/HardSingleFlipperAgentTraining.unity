@@ -373,6 +373,14 @@ PrefabInstance:
       propertyPath: m_Creator
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5701941905613047847, guid: 333f20e213640e34dacd6c074660c21e, type: 3}
+      propertyPath: m_BehaviorType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5701941905613047847, guid: 333f20e213640e34dacd6c074660c21e, type: 3}
+      propertyPath: m_BrainParameters.VectorObservationSize
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7034968556934412149, guid: 333f20e213640e34dacd6c074660c21e, type: 3}
       propertyPath: m_Name
       value: LearningArea
