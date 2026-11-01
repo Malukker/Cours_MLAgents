@@ -6,4 +6,5 @@ public enum TypeRecompense
     BalleDansDrain,
     BalleSortie,
     TempsEcoule,
+    ProcheCible,
 }

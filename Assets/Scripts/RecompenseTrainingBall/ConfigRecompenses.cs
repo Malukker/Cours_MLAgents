@@ -13,6 +13,9 @@ public class ConfigRecompenses : ScriptableObject
     }
     
     [SerializeField] List<LigneRecompense> lignes = new List<LigneRecompense>();
+    
+    [SerializeField] float distanceProximiteMax = 20f;
+    public float DistanceProximiteMax => distanceProximiteMax;
 
     public float ValeurDe(TypeRecompense type)
     {

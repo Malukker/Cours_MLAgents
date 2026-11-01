@@ -84,4 +84,10 @@ public class CompteurRecompenses
         }
         return texte.ToString();
     }
+    
+    public float Pourcentage(TypeRecompense type)
+    {
+        int nb = nbParType.ContainsKey(type) ? nbParType[type] : 0; // 0 si ce type n'est jamais arrivé
+        return NbEpisodes > 0 ? (float)nb / NbEpisodes * 100f : 0f;  // évite la division par 0
+    }
 }
