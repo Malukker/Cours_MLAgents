@@ -22,12 +22,12 @@ public class FlipperAgent : Agent
     [SerializeField] string nomFichierCsv = "Diagnostic_v1";
     string cheminCsv;
     
-    [SerializeField] float vitesseMaxBalle = 200f; // vitesse de la balle
+    [SerializeField] float vitesseMaxBalle = 200f;
     
     [SerializeField] bool afficherDetailsConsole = false;
     
-    float distanceMinCible = float.MaxValue;           // plus petite distance balle-cible pendant le tir (en cm)
-    bool balleFrappee = false;                         // la balle a-t-elle touché mon flipper pendant ce tir ?
+    float distanceMinCible = float.MaxValue;
+    bool balleFrappee = false;
     
     bool balleEnContactAvant = false;   
     float meilleureTrajectoireTir = 0f; 
@@ -50,8 +50,8 @@ public class FlipperAgent : Agent
 
     int id = 0;
     int episodeId = 0;
-    int nbTirsJoues = 0;            // nombre total de tirs terminés
-    int nbTirsReussis = 0;          // nombre de tirs où la cible a été touchée
+    int nbTirsJoues = 0;
+    int nbTirsReussis = 0;
     bool cibleToucheeCeTir = false; // la cible a-t-elle été touchée pendant le tir en cours ?
     bool evenementCeTir = false;
 
@@ -134,31 +134,31 @@ public class FlipperAgent : Agent
         Vector2 position = trainingPinball.Ball.position;                              // point de départ
         Vector2 vitesse = trainingPinball.Ball.linearVelocity;                         // vitesse au départ
         Vector2 gravite = Physics2D.gravity * trainingPinball.Ball.gravityScale;       // gravité appliquée à la balle
-        Vector2 cible = trainingPinball.Target.transform.position;                     // centre de la cible
+        Vector2 cible = trainingPinball.Target.transform.position;                  // centre de la cible
 
         float distanceMin = float.MaxValue;
-        for (int i = 0; i < 100; i++) // on simule 2 secondes, par pas de 0,02 s
+        for (int i = 0; i < 100; i++)
         {
             float t = i * 0.02f;
             Vector2 positionPrevue = position + vitesse * t + 0.5f * gravite * t * t;  // formule de la parabole
             distanceMin = Mathf.Min(distanceMin, Vector2.Distance(positionPrevue, cible));
         }
-        return distanceMin * trainingPinball.Configuration.CentimeterPerUnit;          // conversion en cm
+        return distanceMin * trainingPinball.Configuration.CentimeterPerUnit;
     }
     
     private void FixedUpdate()
     {
-                bool balleEnContact = BallInContact; // vrai si la balle touche mon flipper 
-                if (balleEnContactAvant && !balleEnContact) // elle était en contact, et ne l'est plus : elle vient de partir
+                bool balleEnContact = BallInContact;
+                if (balleEnContactAvant && !balleEnContact)
                 {
                     float vitesseCm = trainingPinball.Ball.linearVelocity.magnitude * trainingPinball.Configuration.CentimeterPerUnit;
-                    if (vitesseCm > vitesseMinFrappe) // seulement une vraie frappe, pas une balle qui roule
+                    if (vitesseCm > vitesseMinFrappe)
                     {
-                        float distanceMax = configRecompenses.DistanceProximiteMax;            // même rayon que la proximité
+                        float distanceMax = configRecompenses.DistanceProximiteMax;
                         float distancePrevue = DistancePrevueALaCible();
-                        float facteur = Mathf.Clamp01(1f - distancePrevue / distanceMax);      // 1 = droit sur la cible, 0 = trop loin
+                        float facteur = Mathf.Clamp01(1f - distancePrevue / distanceMax);
         
-                        // On ne récompense que l'amélioration par rapport à la meilleure frappe du tir
+                        //récompense que l'amélioration
                         if (facteur > meilleureTrajectoireTir)
                         {
                             DonnerRecompense(TypeRecompense.TrajectoireVersCible, facteur - meilleureTrajectoireTir);
@@ -166,17 +166,15 @@ public class FlipperAgent : Agent
                         }
                     }
                 }
-                balleEnContactAvant = balleEnContact; // on mémorise pour l'image suivante
+                balleEnContactAvant = balleEnContact; //mémorise pour l'image suivante
         
-        // Pour chaque agent : après la frappe, on mémorise la distance la plus courte entre la balle et la cible
         if (balleFrappee)
         {
             float distance = Vector2.Distance(trainingPinball.Ball.position, trainingPinball.Target.transform.position)
-                             * trainingPinball.Configuration.CentimeterPerUnit; // distance en cm
-            distanceMinCible = Mathf.Min(distanceMinCible, distance);         // on garde la plus petite
+                             * trainingPinball.Configuration.CentimeterPerUnit;
+            distanceMinCible = Mathf.Min(distanceMinCible, distance);
         }
 
-        // La suite (bilan de l'environnement) n'est faite que par l'agent 0
         if (id != 0) { return; }
 
         if (Time.fixedTime < prochainBilan) { return; }
@@ -184,7 +182,7 @@ public class FlipperAgent : Agent
         Debug.Log($"=== BILAN ENVIRONNEMENT (t = {Time.fixedTime:F0} s) === Moyenne période : {compteurEnvironnement.MoyennePeriode():F2} | Moyenne totale : {compteurEnvironnement.MoyenneTotale:F2} | Épisodes : {compteurEnvironnement.NbEpisodes}");
         Debug.Log($"=== BILAN DÉTAIL === {compteurEnvironnement.ResumeParType()}");
 
-        File.AppendAllText(cheminCsv, compteurEnvironnement.LigneCsv(Time.fixedTime) + "\n"); // ligne CSV avant la nouvelle période
+        File.AppendAllText(cheminCsv, compteurEnvironnement.LigneCsv(Time.fixedTime) + "\n");
         compteurEnvironnement.NouvellePeriode();
         prochainBilan = Time.fixedTime + intervalleBilan;
     }
@@ -197,42 +195,41 @@ public class FlipperAgent : Agent
         ballEnterFlipperTimestamp = 0f;
         ballEnterOtherFlipperTimestamp = 0;
         episodeBeginTimestamp = Time.fixedTime;
-        cibleToucheeCeTir = false; // Nouveau tir : la cible n'a pas encore été touchée
+        cibleToucheeCeTir = false;
         evenementCeTir = false;
-        distanceMinCible = float.MaxValue; // nouveau tir : aucune distance mesurée
-        balleFrappee = false;              // nouveau tir : la balle n'a pas encore été frappée
-        balleEnContactAvant = false;  // nouveau tir : la balle n'est pas encore en contact
-        meilleureTrajectoireTir = 0f; // nouveau tir : aucune trajectoire récompensée
+        distanceMinCible = float.MaxValue;
+        balleFrappee = false;
+        balleEnContactAvant = false;
+        meilleureTrajectoireTir = 0f;
     }
 
     Vector2 VueDepuisFlipper(Vector2 positionMonde)
     {
-        Flipper monFlipper = trainingPinball.Flipper(side);                                          // le flipper de cet agent
-        Vector2 flipperVersPoint = positionMonde - (Vector2)monFlipper.transform.position;           // vecteur flipper -> point
-        Vector2 pointVuDuFlipper = monFlipper.WorldToLocalVector(flipperVersPoint);                  // dans le repère du flipper
-        Vector2 pointEnCm = pointVuDuFlipper * trainingPinball.Configuration.CentimeterPerUnit;      // conversion en cm
-        return pointEnCm / trainingPinball.Configuration.AveragePinballDimension;                    // normalisation
+        Flipper monFlipper = trainingPinball.Flipper(side);
+        Vector2 flipperVersPoint = positionMonde - (Vector2)monFlipper.transform.position;
+        Vector2 pointVuDuFlipper = monFlipper.WorldToLocalVector(flipperVersPoint);
+        Vector2 pointEnCm = pointVuDuFlipper * trainingPinball.Configuration.CentimeterPerUnit;
+        return pointEnCm / trainingPinball.Configuration.AveragePinballDimension;
     }
     
     public override void CollectObservations(VectorSensor sensor)
     {
-        Flipper monFlipper = trainingPinball.Flipper(side); // le flipper contrôlé par cet agent
+        Flipper monFlipper = trainingPinball.Flipper(side);
 
-        // Position de la balle vue depuis le flipper (2 valeurs)
+        //Position de la balle vue depuis le flipper (2 valeurs)
         sensor.AddObservation(VueDepuisFlipper(trainingPinball.Ball.position));
 
-        // Vitesse de la balle dans le repère du flipper (2 valeurs)
-        // Pour une vitesse, on tourne seulement le vecteur (pas de soustraction : une vitesse n'a pas de point de départ)
+        //Vitesse de la balle dans le repère du flipper (2 valeurs)
         Vector2 vitesseVueDuFlipper = monFlipper.WorldToLocalVector(trainingPinball.Ball.linearVelocity);
         sensor.AddObservation(vitesseVueDuFlipper * trainingPinball.Configuration.CentimeterPerUnit / vitesseMaxBalle);
 
-        // Position de la cible vue depuis le flipper (2 valeurs)
+        //Position de la cible vue depuis le flipper (2 valeurs)
         sensor.AddObservation(VueDepuisFlipper(trainingPinball.Target.transform.position));
 
-        // Angle actuel du flipper : 0 = baissé, 1 = levé au maximum (1 valeur)
+        //Angle actuel du flipper : 0 = baissé, 1 = levé au maximum (1 valeur)
         sensor.AddObservation(monFlipper.CurrentAngleOffset / trainingPinball.Configuration.FlipperAngleOffsetMax);
 
-        // Bouton appuyé ou non : 1 = appuyé, 0 = relâché (1 valeur)
+        //Bouton appuyé ou non : 1 = appuyé, 0 = relâché (1 valeur)
         sensor.AddObservation(trainingPinball.IsButtonPressed(side) ? 1f : 0f);
     }
 
@@ -259,44 +256,39 @@ public class FlipperAgent : Agent
     
     void DonnerRecompense(TypeRecompense type, float facteur = 1f)
     {
-        float valeur = configRecompenses.ValeurDe(type) * facteur; // valeur de la config, ajustée par le facteur
-        AddReward(valeur);                                         // donne la récompense à l'agent
-        compteurAgent.Enregistrer(type, valeur);                   // compte pour le diagnostic de l'agent
-        compteurEnvironnement.Enregistrer(type, valeur);           // compte pour le diagnostic de l'environnement
+        float valeur = configRecompenses.ValeurDe(type) * facteur;
+        AddReward(valeur);
+        compteurAgent.Enregistrer(type, valeur);
+        compteurEnvironnement.Enregistrer(type, valeur);
 
         if (afficherDetailsConsole) { Debug.Log($"[Agent {id}] Récompense {type} : {valeur:F2}"); }
     }
 
     void HandleOnEpisodeEnd()
     {
-        // Aucun événement pendant ce tir : il s'est terminé par la limite de temps
         if (!evenementCeTir)
         {
             DonnerRecompense(TypeRecompense.TempsEcoule);
         }
         
-        float distanceMax = configRecompenses.DistanceProximiteMax; // rayon lu dans la config de cette version
+        float distanceMax = configRecompenses.DistanceProximiteMax;
         if (!cibleToucheeCeTir && balleFrappee && distanceMinCible < distanceMax)
         {
-            float facteur = 1f - distanceMinCible / distanceMax; // 1 = frôle la cible, 0 = à la limite
+            float facteur = 1f - distanceMinCible / distanceMax;
             DonnerRecompense(TypeRecompense.ProcheCible, facteur);
         }
 
-        // On lit le total des récompenses du tir AVANT de terminer l'épisode (EndEpisode le remet à 0)
         float scoreDuTir = GetCumulativeReward();
 
-        // Statistiques de réussite de cet agent
-        nbTirsJoues++;                                   // un tir de plus terminé
-        if (cibleToucheeCeTir) { nbTirsReussis++; }      // la cible a été touchée : réussite
-        float tauxReussite = (float)nbTirsReussis / nbTirsJoues * 100f; // pourcentage de réussite
+        nbTirsJoues++;
+        if (cibleToucheeCeTir) { nbTirsReussis++; }
+        float tauxReussite = (float)nbTirsReussis / nbTirsJoues * 100f;
 
-        // Consigne 2.1 : afficher le cumul des récompenses en fin d'épisode (+ le taux de réussite de l'agent)
         if (afficherDetailsConsole)
         {
             Debug.Log($"[Agent {id}] Fin du tir n°{episodeId} -> cumul : {scoreDuTir} | Réussite : {nbTirsReussis}/{nbTirsJoues} = {tauxReussite:F1} %");
         }
 
-        // On clôture l'épisode dans les deux compteurs
         compteurAgent.TerminerEpisode();
         compteurEnvironnement.TerminerEpisode();
 
@@ -314,7 +306,7 @@ public class FlipperAgent : Agent
         }
 
         HandleOnBallInContactWithFlipper(side);
-        balleFrappee = true; // la balle a touché mon flipper : on commence à mesurer sa distance à la cible
+        balleFrappee = true;
     }
 
     void HandleOnBallInContactWithFlipper(FlipperSide side)
@@ -329,8 +321,8 @@ public class FlipperAgent : Agent
 
     void HandleOnBallHitTarget()
     {
-        DonnerRecompense(TypeRecompense.CibleTouchee); // la valeur viens de la config
-        cibleToucheeCeTir = true; // On retient que ce tir a touché la cible
+        DonnerRecompense(TypeRecompense.CibleTouchee);
+        cibleToucheeCeTir = true;
         evenementCeTir =  true;
     }
 
