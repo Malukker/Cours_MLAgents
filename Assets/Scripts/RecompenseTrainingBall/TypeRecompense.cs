@@ -7,4 +7,5 @@ public enum TypeRecompense
     BalleSortie,
     TempsEcoule,
     ProcheCible,
+    TrajectoireVersCible,
 }

@@ -29,6 +29,10 @@ public class FlipperAgent : Agent
     float distanceMinCible = float.MaxValue;           // plus petite distance balle-cible pendant le tir (en cm)
     bool balleFrappee = false;                         // la balle a-t-elle touché mon flipper pendant ce tir ?
     
+    bool balleEnContactAvant = false;   
+    float meilleureTrajectoireTir = 0f; 
+    const float vitesseMinFrappe = 30f; 
+    
     static CompteurRecompenses compteurEnvironnement = new CompteurRecompenses();
     
     // Accès en lecture au compteur de l'environnement
@@ -125,8 +129,45 @@ public class FlipperAgent : Agent
         trainingPinball.onEpisodeEnd -= HandleOnEpisodeEnd;
     }
 
+    float DistancePrevueALaCible()
+    {
+        Vector2 position = trainingPinball.Ball.position;                              // point de départ
+        Vector2 vitesse = trainingPinball.Ball.linearVelocity;                         // vitesse au départ
+        Vector2 gravite = Physics2D.gravity * trainingPinball.Ball.gravityScale;       // gravité appliquée à la balle
+        Vector2 cible = trainingPinball.Target.transform.position;                     // centre de la cible
+
+        float distanceMin = float.MaxValue;
+        for (int i = 0; i < 100; i++) // on simule 2 secondes, par pas de 0,02 s
+        {
+            float t = i * 0.02f;
+            Vector2 positionPrevue = position + vitesse * t + 0.5f * gravite * t * t;  // formule de la parabole
+            distanceMin = Mathf.Min(distanceMin, Vector2.Distance(positionPrevue, cible));
+        }
+        return distanceMin * trainingPinball.Configuration.CentimeterPerUnit;          // conversion en cm
+    }
+    
     private void FixedUpdate()
     {
+                bool balleEnContact = BallInContact; // vrai si la balle touche mon flipper 
+                if (balleEnContactAvant && !balleEnContact) // elle était en contact, et ne l'est plus : elle vient de partir
+                {
+                    float vitesseCm = trainingPinball.Ball.linearVelocity.magnitude * trainingPinball.Configuration.CentimeterPerUnit;
+                    if (vitesseCm > vitesseMinFrappe) // seulement une vraie frappe, pas une balle qui roule
+                    {
+                        float distanceMax = configRecompenses.DistanceProximiteMax;            // même rayon que la proximité
+                        float distancePrevue = DistancePrevueALaCible();
+                        float facteur = Mathf.Clamp01(1f - distancePrevue / distanceMax);      // 1 = droit sur la cible, 0 = trop loin
+        
+                        // On ne récompense que l'amélioration par rapport à la meilleure frappe du tir
+                        if (facteur > meilleureTrajectoireTir)
+                        {
+                            DonnerRecompense(TypeRecompense.TrajectoireVersCible, facteur - meilleureTrajectoireTir);
+                            meilleureTrajectoireTir = facteur;
+                        }
+                    }
+                }
+                balleEnContactAvant = balleEnContact; // on mémorise pour l'image suivante
+        
         // Pour chaque agent : après la frappe, on mémorise la distance la plus courte entre la balle et la cible
         if (balleFrappee)
         {
@@ -160,6 +201,8 @@ public class FlipperAgent : Agent
         evenementCeTir = false;
         distanceMinCible = float.MaxValue; // nouveau tir : aucune distance mesurée
         balleFrappee = false;              // nouveau tir : la balle n'a pas encore été frappée
+        balleEnContactAvant = false;  // nouveau tir : la balle n'est pas encore en contact
+        meilleureTrajectoireTir = 0f; // nouveau tir : aucune trajectoire récompensée
     }
 
     Vector2 VueDepuisFlipper(Vector2 positionMonde)

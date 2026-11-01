@@ -368,10 +368,10 @@ PrefabInstance:
     - target: {fileID: 3134987307893494877, guid: e27063be066a8044db6a8a7bef429251, type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: 1d39fd5db1d76b546b5db29e93d34d50, type: 3}
+      objectReference: {fileID: 5022602860645237092, guid: 63b6bc95c3f63c8439ccbcdd9cf211df, type: 3}
     - target: {fileID: 3134987307893494877, guid: e27063be066a8044db6a8a7bef429251, type: 3}
       propertyPath: m_BehaviorType
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3497045355834576187, guid: e27063be066a8044db6a8a7bef429251, type: 3}
       propertyPath: m_Creator
@@ -381,6 +381,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: EasySingleFlipperLearningArea
       objectReference: {fileID: 0}
+    - target: {fileID: 8127276252786913685, guid: e27063be066a8044db6a8a7bef429251, type: 3}
+      propertyPath: nomFichierCsv
+      value: Enzo_Easy_83%
+      objectReference: {fileID: 0}
+    - target: {fileID: 8127276252786913685, guid: e27063be066a8044db6a8a7bef429251, type: 3}
+      propertyPath: configRecompenses
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f6eac9e779a4e340a2fdd5dd3ea5f4b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

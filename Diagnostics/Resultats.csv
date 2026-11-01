@@ -7,3 +7,12 @@ Date;Scene;Modele;ConfigRecompenses;Tirs;Score;ScoreAbattre;Verdict;Drain;Sortie
 2026-11-01 20:12;EasySingleFlipperMultiAgentTraining;Enzo_0_0_6;Recompenses_Enzo_0_0_6;500;78,6;75;BATTU;0,0;21,4;0,0
 2026-11-01 20:14;EasySingleFlipperMultiAgentTraining;Enzo_Easy_79%;Recompenses_Enzo_0_0_6;500;83,2;75;BATTU;0,0;16,8;0,0
 2026-11-01 20:19;EasySingleFlipperMultiAgentTraining;Enzo_Easy_83%;Recompenses_Enzo_0_0_6;500;79,2;75;BATTU;0,0;20,8;0,0
+2026-11-01 20:29;HardSingleFlipperMultiAgentTraining;Enzo_Easy_83%;Recompenses_Enzo_0_0_6;500;27,6;50;PAS ENCORE;4,4;67,4;0,6
+2026-11-01 20:47;HardSingleFlipperMultiAgentTraining;Enzo_1_0_1;Recompenses_Enzo_1_0_1;500;34,8;50;PAS ENCORE;1,2;63,4;0,6
+2026-11-01 21:00;HardSingleFlipperMultiAgentTraining;Enzo_1_0_2;Recompenses_Enzo_1_0_2;500;43,0;50;PAS ENCORE;2,4;54,4;0,2
+2026-11-01 21:12;HardSingleFlipperMultiAgentTraining;Enzo_1_0_3;Recompenses_Enzo_1_0_3;500;44,2;50;PAS ENCORE;0,8;54,4;0,6
+2026-11-01 21:31;HardSingleFlipperMultiAgentTraining;Enzo_1_0_4;Recompenses_Enzo_1_0_4;500;50,6;50;BATTU;0,4;48,6;0,4
+2026-11-01 21:33;HardSingleFlipperMultiAgentTraining;Enzo_1_0_4;Recompenses_Enzo_1_0_4;500;46,4;50;PAS ENCORE;1,4;51,4;0,8
+2026-11-01 21:43;HardSingleFlipperMultiAgentTraining;Enzo_1_0_5;Recompenses_Enzo_1_0_5;500;48,6;50;PAS ENCORE;1,2;50,0;0,2
+2026-11-01 21:59;HardSingleFlipperMultiAgentTraining;Enzo_1_0_6;Recompenses_Enzo_1_0_6;1002;52,2;50;BATTU;0,5;47,2;0,1
+2026-11-01 22:01;HardSingleFlipperMultiAgentTraining;Enzo_1_0_6;Recompenses_Enzo_1_0_6;1000;53,5;50;BATTU;0,7;45,4;0,4

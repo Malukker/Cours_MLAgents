@@ -52,9 +52,9 @@ MonoBehaviour:
   MaxStep: 0
   trainingPinball: {fileID: 0}
   side: 0
-  configRecompenses: {fileID: 11400000, guid: 8f6eac9e779a4e340a2fdd5dd3ea5f4b, type: 2}
+  configRecompenses: {fileID: 11400000, guid: 270d6f823e66c6b49bcae6843c6efed0, type: 2}
   intervalleBilan: 10
-  nomFichierCsv: Enzo_0_0_6
+  nomFichierCsv: Enzo_1_0_6
   vitesseMaxBalle: 200
   afficherDetailsConsole: 0
 --- !u!114 &6143876766288088247
@@ -79,7 +79,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: 63b6bc95c3f63c8439ccbcdd9cf211df, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: b0fb8e0f4a8a0804a86b657a384d23c3, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 2
   m_BehaviorName: PinballFlipper

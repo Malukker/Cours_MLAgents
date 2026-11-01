@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class TesteurIA : MonoBehaviour
 {
-    [SerializeField] int nbTirsTest = 500;      // nombre de tirs joués avant de conclure
+    [SerializeField] int nbTirsTest = 1000;      // nombre de tirs joués avant de conclure
     [SerializeField] bool arreterLePlay = true; // arrêter le Play automatiquement à la fin du test
+    
 
     float scoreAbattre = 0f;        // score du prof en %, choisi automatiquement dans Start()
     bool testTermine = false;       // pour ne donner le résultat qu'une seule fois
